@@ -1,5 +1,5 @@
 @echo off
 
-php calculate_gapi.php
+php calculate_inefficient.php
 
 pause
