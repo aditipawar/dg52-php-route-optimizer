@@ -1,4 +1,6 @@
 <?php
+	
+	exit( 'This method is deprecated since it is incorrect as of right now.');
 
 	require( 'route.php' );
 
@@ -17,6 +19,7 @@
 		echo "Calculating route " . ($i+1) . " out of $num_wp...";
 
 		// Create the set
+		// TODO: This is wrong, we need to find all possible permutations of the group of waypoints. Deprecate the file until solved.
 		for ( $j = 0; $j < $num_wp; ++$j )
 			$set[$j] = $input_route['waypoints'][ ( ($i+$j) > $num_wp-1 ? ($i+$j)%($num_wp) : ($i+$j) ) ];
 
