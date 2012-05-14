@@ -1,5 +1,5 @@
 @echo off
 
-php calculate_inefficient.php
+php calculate.php
 
 pause
