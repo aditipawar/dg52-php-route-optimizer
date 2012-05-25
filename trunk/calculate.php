@@ -1,6 +1,23 @@
 <?php
 
-	require( 'route.php' );
+	// Debugging on or off?
+	define( 'DEBUG', true );
+
+	// Let's get the route
+	$_input = file_get_contents( "waypoints.txt" );
+	$pois = explode( "\n", $_input );
+
+	// Parse
+	if ( count( $pois ) > 2 )
+	{
+		$input_route['start'] = array_shift( $pois );
+		$input_route['end'] = array_pop( $pois );
+
+		// What's left is are the waypoints
+		$input_route['waypoints'] = $pois;
+	}
+	else
+		exit( "Please enter at least a starting position and an ending position!\n" );
 
 	// Add start and end to array
 	$waypoints = $input_route['waypoints'];
@@ -33,7 +50,7 @@
 			}
 
 			// Skip querying if there already exists such a distance
-			if ( isset( $distances[$j][$i] ) && $distances[$j][$i] > 0 )
+			if ( isset( $distances[$j][$i] ) )
 			{
 				$distances[$i][$j] = $distances[$j][$i];
 				continue;
@@ -99,53 +116,24 @@
 	for ( $i = $_s+1; $i < $_e; ++$i )
 		$numbers[] = $i;
 
+	if ( DEBUG )
+		$_permutation_start = set_time_marker();
+
 	// Find all permutations of waypoint orders and store them in an array
-	getpermutations( '0', $numbers, $permutations );
+	find_shortest_distance( '0', $numbers, $_e, $distances, $results );
 
-	// Loop through each permutation
-	foreach ( $permutations as $permutation )
-	{
-		// Explode each permutation into an array of waypoints
-		$perm_array = explode( ',', $permutation );
-
-		// Add end (start is already there as prefix to permutations function)
-		$perm_array[] = $_e;
-
-		// Generate string key
-		$permutation = implode( ',', $perm_array );
-
-		// Init array
-		$results[$permutation] = 0;
-
-		// Loop through each entry in the permutation
-		foreach ( $perm_array as $pos => $point )
-		{
-			// Store distance unless $point is at the end
-			if ( $point != $_e )
-				$results[$permutation] += $distances[$point][$perm_array[$pos+1]];
-		}
-	}
-
-	// Sort results
-	asort( $results );
-
-	// Get first element
-	list( $shortest_combination ) = array_keys( $results );
-	$shortest_distance = $results[$shortest_combination];
-
-	echo "TEST1:";
-	print_r( $shortest_combination );
-
-	echo "\nTEST2:";
-	print_r( $shortest_distance );
+	if ( DEBUG )
+		$_permutation_end = set_time_marker(); 
 
 	echo "\n\n===========\n";
 	echo "RESULTS";
 	echo "\n===========\n";
 
 	echo "\nFastest route (from " . $input_route['start'] . " to " . $input_route['end'] . ") is the following:\n";
-	foreach ( explode( ',', $shortest_combination ) as $num => $pos )
+	foreach ( explode( ',', $results['waypoints'] ) as $num => $pos )
 		echo "\t" . ($num+1) . " " . $waypoints[$pos] . "\n";
-	echo "\nTOTAL DISTANCE: " . ($shortest_distance/1000) . "km\n\n";
+	echo "\nTOTAL DISTANCE: " . ($results['distance']/1000) . "km\n";
+	if ( DEBUG )
+		echo "CALCULATION TIME: " . number_format( ( $_permutation_end - $_permutation_start ), 2 ) . "s\n\n";
 
 ?>
