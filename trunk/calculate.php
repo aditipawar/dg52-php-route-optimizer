@@ -15,6 +15,9 @@
 
 		// What's left is are the waypoints
 		$input_route['waypoints'] = $pois;
+
+		if ( count( $pois ) >= 10 )
+			echo "WARNING! You have entered more than 10 waypoints.\nThe calculation phase may take a long time!\n\n";
 	}
 	else
 		exit( "Please enter at least a starting position and an ending position!\n" );
@@ -29,12 +32,14 @@
 	// [from][to] = distance
 	$distances = array();
 
+	echo "Calculating table of distances...\n";
+
 	/**
 	 * Main loop. Loop through every possible set of waypoints.
 	 */
 	for ( $i = 0; $i < $num_wp; ++$i )
 	{
-		echo "Getting all possible distance combinations for " . ($i+1) . " out of $num_wp...";
+		echo "\t" . ($i+1) . " of $num_wp...";
 
 		// Initialize array
 		$distances[$i] = array();
@@ -91,14 +96,17 @@
 			$distances[$i][$j] = $results->rows[0]->elements[0]->distance->value;
 		}
 
-		echo " done! \n";
+		// Only sleep if we are not at the end
+		if ( $i != $num_wp )
+			sleep(2);
 
-		// Sleep to prevent query limit
-		sleep(2);
+		echo " done! \n";
 	}
 
+	echo "\nBeginning calculation phase...\nThis may take a long time depending on how many waypoints you have!";
+
 	/**
-	 * We now have the distances between any two points. We will now BRUTEFORCE THAT FUCKER!
+	 * We now have the distances between any two points. Bruteforce is not nice :( .
 	 */
 	// Initializing array positions
 	$_s = 0;
@@ -125,13 +133,16 @@
 	if ( DEBUG )
 		$_permutation_end = set_time_marker(); 
 
+	/**
+	 * Let's print the results, shall we?
+	 */
 	echo "\n\n===========\n";
 	echo "RESULTS";
 	echo "\n===========\n";
 
-	echo "\nFastest route (from " . $input_route['start'] . " to " . $input_route['end'] . ") is the following:\n";
+	echo "\nFastest route is the following:\n";
 	foreach ( explode( ',', $results['waypoints'] ) as $num => $pos )
-		echo "\t" . ($num+1) . " " . $waypoints[$pos] . "\n";
+		echo "\t" . ($num+1) . ". " . $waypoints[$pos] . "\n";
 	echo "\nTOTAL DISTANCE: " . ($results['distance']/1000) . "km\n";
 	if ( DEBUG )
 		echo "CALCULATION TIME: " . number_format( ( $_permutation_end - $_permutation_start ), 2 ) . "s\n\n";
