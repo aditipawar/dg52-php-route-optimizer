@@ -1,5 +1,5 @@
 @echo off
 
-php calculate.php
+php example.php
 
 pause
