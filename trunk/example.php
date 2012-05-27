@@ -12,6 +12,9 @@
 
 	require( "class.RouteOptimizer.php" );
 
-	$obj = new RouteOptimizer( "Sweden", array( "Germany", "Monaco", "Switzerland", "France", "United Kingdom" ), "Norway" );
+	$obj = new RouteOptimizer( "Sweden",
+								array( "Germany", "Monaco", "Switzerland", "France", "United Kingdom" ),
+								"Norway"
+			);
 
 ?>
