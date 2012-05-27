@@ -176,7 +176,7 @@
 		}
 
 		/**
-		 * find_shorest_distance()
+		 * find_shortest_distance()
 		 *
 		 * @abstract The heavy lifter, finds the shortest distance by permuting the waypoints inputted
 		 * and calculating the shortest route out of them all.
