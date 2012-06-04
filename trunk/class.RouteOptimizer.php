@@ -67,26 +67,22 @@
 			/**
 			 * Main loop. Loop through every possible set of waypoints.
 			 */
-			for ( $i = 0; $i < $num_wp; ++$i )
-			{
+			for ( $i = 0; $i < $num_wp; ++$i ) {
 				echo "\t" . ($i+1) . " of $num_wp...";
 
 				// Initialize array
 				$this->distances[$i] = array();
 
 				// Loop through all other waypoints
-				for ( $j = 0; $j < $num_wp; ++$j )
-				{
+				for ( $j = 0; $j < $num_wp; ++$j ) {
 					// Skip querying if we're looking at the same waypoints
-					if ( $j == $i )
-					{
+					if ( $j == $i ) {
 						$this->distances[$i][$j] = 0;
 						continue;
 					}
 
 					// Skip querying if there already exists such a distance
-					if ( isset( $this->distances[$j][$i] ) )
-					{
+					if ( isset( $this->distances[$j][$i] ) ) {
 						$this->distances[$i][$j] = $this->distances[$j][$i];
 						continue;
 					}
@@ -116,8 +112,7 @@
 					// Decode the response
 					$results = json_decode( $body );
 
-					if ( $results->status != "OK" )
-					{
+					if ( $results->status != "OK" ) {
 						echo "ERROR! " . $results->status;
 						exit;
 					}
@@ -209,16 +204,14 @@
 				$temp_result = 0;
 
 				// Loop through each entry in the permutation
-				foreach ( $perm_array as $pos => $point )
-				{
+				foreach ( $perm_array as $pos => $point ) {
 					// Store distance unless $point is the end
 					if ( $point != $end )
 						$temp_result += $distances[$point][$perm_array[$pos+1]];
 				}
 
 				// Only store if it is smaller than the previous best. If nothing has been stored yet, store the first value.
-				if ( !isset( $results['distance'] ) || $temp_result < $results['distance'] )
-				{
+				if ( !isset( $results['distance'] ) || $temp_result < $results['distance'] ) {
 					$results['distance'] = $temp_result;
 					$results['waypoints'] = $permutation . "," . $end;
 				}
