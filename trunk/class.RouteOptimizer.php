@@ -3,9 +3,9 @@
 	/**
 	 * dG52 PHP Route Optimizer
 	 *
-	 * @author: Douglas Stridsberg
-	 * @email: doggie52@gmail.com
-	 * @url: www.douglasstridsberg.com
+	 * @author Douglas Stridsberg
+	 * @email doggie52@gmail.com
+	 * @url www.douglasstridsberg.com
 	 *
 	 * Main class file.
 	 */
@@ -46,7 +46,7 @@
 		 * @param array $waypoints The array of waypoints to cover.
 		 * @param string $end The ending location.
 		 *
-		 * @todo Add a return value.
+		 * @todo Store the best route in the object.
 		 */
 		public function RouteOptimizer( $start, $waypoints, $end )
 		{
